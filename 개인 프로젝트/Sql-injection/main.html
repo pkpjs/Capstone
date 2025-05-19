@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+
+<header>
+    <h1>테스트 중 입니다.</h1>
+</header>
+
+<nav id="buttons">
+    <a href="login/login.html" id="loginButton" class="button">로그인</a>
+    <a href="join/join.html" id="joinButton" class="button">회원가입</a>
+    <a href="board/board.html" id="boardButton" class="button">게시판</a>
+    <a href="mypage/mypage.html" id="mypageButton" class="button">마이페이지</a>
+    <a href="notice/notice.html" id="noticeButton" class="button">공지사항</a>
+    <a href="problem/problem.html" id="problem" class="button">문제</a>
+    <a href="#" id="logoutButton" class="button" style="display: none;">로그아웃</a>
+</nav>
+
+<script>
+    // 페이지 로드 시 실행
+    window.onload = function () {
+        // 서버에서 로그인 상태 확인
+        fetch('check_login.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.loggedIn) {
+                    // 사용자가 로그인한 경우
+                    document.getElementById('loginButton').style.display = 'none';
+                    document.getElementById('joinButton').style.display = 'none';
+                    document.getElementById('logoutButton').style.display = 'block';
+                } else {
+                    // 사용자가 로그인하지 않은 경우
+                    document.getElementById('loginButton').style.display = 'block';
+                    document.getElementById('joinButton').style.display = 'block';
+                    document.getElementById('logoutButton').style.display = 'none';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+
+        // 로그아웃 버튼 클릭 시 실행
+        document.getElementById('logoutButton').addEventListener('click', function () {
+            // 로그아웃 요청을 서버에 전송
+            fetch('logout.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // 로그아웃 성공 시 main.html로 이동
+                        window.location.href = 'main.html';
+                    } else {
+                        console.error('로그아웃 실패');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    };
+</script>
+
+</body>
+</html>

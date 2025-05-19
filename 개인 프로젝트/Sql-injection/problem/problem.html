@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문제 페이지</title>
+    <link rel="stylesheet" href="problem.css">
+</head>
+<body>
+
+    <h1>문제 페이지</h1>
+
+    <ul>
+        <li><a href="problem1.html" onclick="showQuestion(1)">문제 1</a></li>
+        <li><a href="problem2.html" onclick="showQuestion(2)">문제 2</a></li>
+        <li><a href="problem3.html" onclick="showQuestion(3)">문제 3</a></li>
+        <li><a href="problem4.html" onclick="showQuestion(3)">문제 4</a></li>
+    </ul>
+    </form>
+
+    <script>
+        function showQuestion(questionNumber) {
+            // 모든 문제 숨기기
+            for (var i = 1; i <= 5; i++) {
+                document.getElementById('question' + i).classList.add('hidden');
+            }
+
+            // 선택한 문제 보이기
+            document.getElementById('question' + questionNumber).classList.remove('hidden');
+        }
+
+        function submitQuiz() {
+            // 여기에서 사용자가 입력한 문제를 가져와서 처리하는 로직을 추가할 수 있습니다.
+            var formData = new FormData(document.getElementById('quizForm'));
+            
+            // FormData를 서버로 전송하거나 로컬에서 처리할 수 있습니다.
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+        }
+    </script>
+
+    <!-- 뒤로가기 버튼 -->
+    <button onclick="goBack()">뒤로가기</button>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+</body>
+</html>

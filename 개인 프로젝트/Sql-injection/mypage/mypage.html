@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>마이페이지</title>
+  <link rel="stylesheet" href="mypage.css">
+</head>
+<body>
+
+<div class="mypage-container">
+  <h2>마이페이지</h2>
+  <p>안녕하세요! 환영합니다, <span id="userName"></span>님.</p>
+  <p>회원 정보를 확인하거나 수정하려면 <a href="mypage1.html">여기</a>를 클릭하세요.</p>
+</div>
+
+<script>
+  // 서버에서 사용자의 이름을 가져오는 함수
+  function fetchUserName() {
+    fetch('mypage.php')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('userName').innerText = data.userName;
+      })
+      .catch(error => console.error('Error:', error));
+  }
+
+  // 페이지 로드 시 사용자의 이름을 가져옵니다.
+  window.onload = function () {
+    fetchUserName();
+  };
+</script>
+    <!-- 뒤로가기 버튼 -->
+    <button onclick="goBack()">뒤로가기</button>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+
+</body>
+</html>

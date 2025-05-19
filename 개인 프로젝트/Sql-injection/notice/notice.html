@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>공지사항</title>
+  <link rel="stylesheet" href="notice.css">
+</head>
+<body>
+
+  <h1>공지사항</h1>
+
+  <form action="#" method="get">
+    <input type="text" name="search" placeholder="검색어를 입력해주세요.">
+    <button type="submit">검색</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>번호</th>
+        <th>제목</th>
+        <th>내용</th>
+        <th>삭제</th> <!-- 새로운 열 추가 -->
+      </tr>
+    </thead>
+    <tbody id="postTableBody"></tbody>
+  </table>
+
+  <div>
+    <a href="#" id="prevPage">이전</a>
+    <span id="currentPage"></span>
+    <a href="#" id="nextPage">다음</a>
+    <a href="write_post.html" id="write" class="button">글쓰기</a>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // 초기 페이지 로딩
+      loadPage(1);
+  
+      // 이전 페이지 이동
+      document.getElementById("prevPage").addEventListener("click", function (event) {
+        event.preventDefault();
+        loadPage(currentPage - 1);
+      });
+  
+      // 다음 페이지 이동
+      document.getElementById("nextPage").addEventListener("click", function (event) {
+        event.preventDefault();
+        loadPage(currentPage + 1);
+      });
+    });
+  
+    var currentPage = 1;
+  
+    function loadPage(page) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "notice.php?page=" + page, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          var data = JSON.parse(xhr.responseText);
+          displayPosts(data.data);
+          updatePagination(data.totalPages, page);
+        }
+      };
+      xhr.send();
+    }
+  
+    function displayPosts(posts) {
+      var tableBody = document.getElementById("postTableBody");
+      tableBody.innerHTML = ""; // 기존 목록 초기화
+  
+      for (var i = 0; i < posts.length; i++) {
+        var post = posts[i];
+        var row = tableBody.insertRow(i);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3); // 삭제 버튼 열 추가
+  
+        cell1.textContent = post.id;
+        cell2.textContent = post.title;
+        cell3.innerHTML = post.content; // innerHTML을 사용하여 HTML 태그가 적용되도록 변경
+  
+        // 삭제 버튼 추가
+        var deleteButton = document.createElement("button");
+        deleteButton.textContent = "삭제";
+        deleteButton.onclick = function() {
+          var postId = this.getAttribute('data-post-id');
+          deletePost(postId);
+        };
+        deleteButton.setAttribute('data-post-id', post.id); // 각 버튼에 해당하는 댓글의 ID를 설정
+        cell4.appendChild(deleteButton);
+      }
+    }
+  
+    function deletePost(postId) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "notice.php?delete=" + postId, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          var response = JSON.parse(xhr.responseText);
+          if (response.success) {
+            alert('댓글이 성공적으로 삭제되었습니다.');
+            loadPage(currentPage); // 삭제 후 페이지 리로딩
+          } else {
+            alert('댓글 삭제에 실패했습니다. 에러 메시지: ' + response.message);
+          }
+        }
+      };
+      xhr.send();
+    }
+  
+    function updatePagination(totalPages, currentPage) {
+      var currentPageElement = document.getElementById("currentPage");
+      currentPageElement.textContent = currentPage + " page / " + totalPages + " pages";
+  
+      var prevPageLink = document.getElementById("prevPage");
+      var nextPageLink = document.getElementById("nextPage");
+  
+      if (currentPage === 1) {
+        prevPageLink.style.visibility = "hidden";
+      } else {
+        prevPageLink.style.visibility = "visible";
+      }
+  
+      if (currentPage === totalPages) {
+        nextPageLink.style.visibility = "hidden";
+      } else {
+        nextPageLink.style.visibility = "visible";
+      }
+    }
+  </script>
+  
+  <button onclick="goBack()">뒤로가기</button>
+  
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+  </script>
+  
+  </body>
+  </html>

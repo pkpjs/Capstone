@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글쓰기</title>
+    <link rel="stylesheet" href="write_post.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>글쓰기</h2>
+    <form id="writeForm" enctype="multipart/form-data">
+        <label for="title">제목:</label>
+        <input type="text" id="title" name="title" required>
+
+        <label for="content">내용:</label>
+        <textarea id="content" name="content" rows="4" required></textarea>
+
+
+        <button type="button" onclick="submitForm()">글쓰기</button>
+        <button type="button" onclick="goBack()">뒤로가기</button>
+    </form>
+</div>
+
+<script>
+    function submitForm() {
+        var title = document.getElementById('title').value;
+        var content = document.getElementById('content').value;
+
+        var formData = new FormData();
+        formData.append('title', title);
+        formData.append('content', content);
+
+        // AJAX 요청으로 save_post.php에 데이터 전송
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "write_post.php", true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    alert('글이 성공적으로 작성되었습니다:\n제목: ' + title + '\n내용: ' + content);
+                    // 선택 사항: 새 페이지로 리디렉션하거나 필요에 따라 UI 업데이트
+                } else {
+                    alert('글 작성에 실패했습니다. 에러 메시지: ' + response.message);
+                }
+            }
+        };
+
+        // 폼 데이터 전송
+        xhr.send(formData);
+
+        // 폼 초기화
+        document.getElementById('writeForm').reset();
+    }
+
+    function goBack() {
+        // 브라우저 히스토리에서 뒤로 이동
+        window.history.back();
+    }
+</script>
+
+</body>
+</html>

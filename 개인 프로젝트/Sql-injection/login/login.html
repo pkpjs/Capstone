@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>로그인</title>
+<link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+<h2>로그인</h2>
+<form action="login.php" method="post">
+    <div>
+        <label for="username">사용자 이름:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+        <label for="password">비밀번호:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+        <input type="submit" value="로그인">
+    </div>
+</form>
+    <!-- 뒤로가기 버튼 -->
+    <button onclick="goBack()">뒤로가기</button>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+
+</body>
+</html>

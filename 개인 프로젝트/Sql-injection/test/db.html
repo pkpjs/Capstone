@@ -1,0 +1,77 @@
+<!-- <!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>MySQL 데이터베이스 화면</title>
+</head>
+<body>
+  <h1>MySQL 데이터베이스 화면</h1>
+
+  <div id="tables">
+    <table border="1">
+      <thead>
+        <tr>
+          <th>테이블명</th>
+        </tr>
+      </thead>
+      <tbody id="table-list"></tbody>
+    </table>
+  </div>
+
+  <div id="columns">
+    <table border="1">
+      <thead>
+        <tr>
+          <th>테이블명</th>
+          <th>칼럼명</th>
+          <th>데이터 타입</th>
+        </tr>
+      </thead>
+      <tbody id="column-list"></tbody>
+    </table>
+  </div>
+
+  <script>
+    // 서버에서 테이블 목록을 가져오는 함수
+    async function getTables() {
+      const response = await fetch('db.php');
+      const tables = await response.json();
+
+      return tables;
+    }
+
+    // 서버에서 각 테이블에 대한 칼럼 목록을 가져오는 함수
+    async function getColumns(tableName) {
+      const response = await fetch(`db.php?table=${tableName}`);
+      const columns = await response.json();
+
+      return columns;
+    }
+
+    // HTML에 테이블 목록을 추가하는 함수
+    async function renderTables() {
+      const tableList = document.getElementById('table-list');
+      const tables = await getTables();
+
+      tables.forEach(async (table) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${table}</td>`;
+        tableList.appendChild(tr);
+
+        // 각 테이블에 대한 칼럼 목록을 가져와서 HTML에 추가
+        const columns = await getColumns(table);
+        const columnList = document.getElementById('column-list');
+
+        columns.forEach((column) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${table}</td><td>${column.COLUMN_NAME}</td><td>${column.DATA_TYPE}</td>`;
+          columnList.appendChild(tr);
+        });
+      });
+    }
+
+    // 초기화 함수 호출
+    renderTables();
+  </script>
+</body>
+</html> -->

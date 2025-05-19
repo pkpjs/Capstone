@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>객관식 문제</title>
+    <script>
+        function checkAnswer() {
+            // 사용자가 선택한 답을 가져옴
+            var userAnswer = document.querySelector('input[name="answer"]:checked');
+
+            // 정답을 설정
+            var correctAnswer = "c"; // 실제 문제에 따라 수정해야 함
+
+            // 결과를 표시할 div 요소를 가져옴
+            var resultDiv = document.getElementById("result");
+
+            // 답 비교 및 결과 표시
+            if (userAnswer) {
+                if (userAnswer.value === correctAnswer) {
+                    resultDiv.innerHTML = "정답입니다!";
+                } else {
+                    resultDiv.innerHTML = "오답입니다.";
+                }
+            } else {
+                resultDiv.innerHTML = "답을 선택하세요.";
+            }
+        }
+
+        function goBack() {
+            // 뒤로가기 버튼 클릭 시 이전 페이지로 이동
+            window.history.back();
+        }
+    </script>
+</head>
+<body>
+
+<h2>다음 중 어느 것이 프로그래밍 언어인가요?</h2>
+
+<form onsubmit="event.preventDefault(); checkAnswer();">
+    <input type="radio" name="answer" value="a" id="choiceA">
+    <label for="choiceA">a. HTML</label><br>
+
+    <input type="radio" name="answer" value="b" id="choiceB">
+    <label for="choiceB">b. CSS</label><br>
+
+    <input type="radio" name="answer" value="c" id="choiceC">
+    <label for="choiceC">c. JavaScript</label><br>
+
+    <input type="radio" name="answer" value="d" id="choiceD">
+    <label for="choiceD">d. JPEG</label><br>
+
+    <br>
+    <input type="submit" value="제출">
+</form>
+
+<!-- 결과 표시할 부분 -->
+<div id="result"></div>
+
+<!-- 뒤로가기 버튼 -->
+<button onclick="goBack()">뒤로가기</button>
+
+</body>
+</html>

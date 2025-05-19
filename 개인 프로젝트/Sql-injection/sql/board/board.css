@@ -1,0 +1,36 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  margin: 0 0 20px 0; /* 20px 하단 마진 추가, 나머지는 0으로 조정 */
+}
+
+form {
+  margin-bottom: 20px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 80%; /* Adjust the width as needed */
+  margin-bottom: 20px;
+}
+
+th, td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: left;
+}
+
+a {
+  margin: 0 5px;
+  text-decoration: none;
+}
+
+div {
+  display: flex;
+  align-items: center;
+}
+

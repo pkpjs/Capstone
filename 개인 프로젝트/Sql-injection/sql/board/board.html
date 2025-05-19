@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>자유게시판</title>
+  <link rel="stylesheet" href="board.css">
+</head>
+<body>
+
+  <h1>자유게시판</h1>
+
+  <!-- 검색창 -->
+  <form action="#" method="get">
+    <input type="text" name="search" placeholder="검색어를 입력해주세요.">
+    <button type="submit">검색</button>
+  </form>
+
+  <!-- 파일 업로드 -->
+  <h2>파일 업로드</h2>
+  <form action="upload.php" method="POST" enctype="multipart/form-data">
+    <label for="file">업로드할 파일:</label>
+    <input type="file" name="file" id="file" required>
+    <button type="submit">업로드</button>
+  </form>
+
+  <!-- 게시글 테이블 -->
+  <table>
+    <thead>
+      <tr>
+        <th>번호</th>
+        <th>제목</th>
+        <th>내용</th>
+        <th>파일</th>
+        <th>삭제</th>
+      </tr>
+    </thead>
+    <tbody id="postTableBody"></tbody>
+  </table>
+
+  <!-- 페이지 네비게이션 -->
+  <div>
+    <a href="#" id="prevPage">이전</a>
+    <span id="currentPage"></span>
+    <a href="#" id="nextPage">다음</a>
+    <a href="write_post.html" id="write" class="button">글쓰기</a>
+  </div>
+
+  <!-- 게시글 로딩 및 삭제 스크립트 -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      loadPage(1);
+
+      document.getElementById("prevPage").addEventListener("click", function (event) {
+        event.preventDefault();
+        loadPage(currentPage - 1);
+      });
+
+      document.getElementById("nextPage").addEventListener("click", function (event) {
+        event.preventDefault();
+        loadPage(currentPage + 1);
+      });
+    });
+
+    var currentPage = 1;
+
+    function loadPage(page) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "board.php?page=" + page, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          var data = JSON.parse(xhr.responseText);
+          displayPosts(data.data);
+          updatePagination(data.totalPages, page);
+        }
+      };
+      xhr.send();
+    }
+
+    function displayPosts(posts) {
+      var tableBody = document.getElementById("postTableBody");
+      tableBody.innerHTML = "";
+
+      for (var i = 0; i < posts.length; i++) {
+        var post = posts[i];
+        var row = tableBody.insertRow(i);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
+        var cell5 = row.insertCell(4);
+
+        cell1.textContent = post.id;
+        cell2.textContent = post.title;
+        cell3.innerHTML = post.content;
+
+        // ✅ 파일명만 표시 (경로 제거)
+        if (post.file_path) {
+          const fileName = post.file_path.split('/').pop();
+          cell4.textContent = fileName;
+        } else {
+          cell4.textContent = "-";
+        }
+
+        var deleteButton = document.createElement("button");
+        deleteButton.textContent = "삭제";
+        deleteButton.onclick = function() {
+          var postId = this.getAttribute('data-post-id');
+          deletePost(postId);
+        };
+        deleteButton.setAttribute('data-post-id', post.id);
+        cell5.appendChild(deleteButton);
+      }
+    }
+
+    function deletePost(postId) {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "board.php?delete=" + postId, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          var response = JSON.parse(xhr.responseText);
+          if (response.success) {
+            alert('게시글이 성공적으로 삭제되었습니다.');
+            loadPage(currentPage);
+          } else {
+            alert('삭제 실패: ' + response.message);
+          }
+        }
+      };
+      xhr.send();
+    }
+
+    function updatePagination(totalPages, currentPage) {
+      var currentPageElement = document.getElementById("currentPage");
+      currentPageElement.textContent = currentPage + " page / " + totalPages + " pages";
+
+      var prevPageLink = document.getElementById("prevPage");
+      var nextPageLink = document.getElementById("nextPage");
+
+      prevPageLink.style.visibility = currentPage === 1 ? "hidden" : "visible";
+      nextPageLink.style.visibility = currentPage === totalPages ? "hidden" : "visible";
+    }
+  </script>
+
+  <!-- 뒤로가기 버튼 -->
+  <button onclick="goBack()">뒤로가기</button>
+  <script>
+    function goBack() {
+      window.history.back();
+    }
+  </script>
+
+</body>
+</html>
