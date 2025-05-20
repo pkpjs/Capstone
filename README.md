@@ -1,1 +1,1 @@
-# capstone
+# Capstone 프로젝트 및 개인 프로젝트 저장소입니다.
